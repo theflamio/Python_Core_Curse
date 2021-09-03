@@ -35,18 +35,14 @@ class Flight:
         rows, seats = self._aircraft.seating_plan()
         self._seating = [None] + [{letter: None for letter in seats} for _ in rows]
 
-
     def aircraft_model(self):
         return self._aircraft.model()
-
 
     def number(self):
         return self._number
 
-
     def airline(self):
         return self._number[:2]
-
 
     def allocate_seat(self, seat, passenger):
         row, letter = self._parse_seat(seat)
@@ -55,7 +51,6 @@ class Flight:
             raise ValueError(f"Seat {seat} already occupied")
 
         self._seating[row][letter] = passenger
-
 
     def _parse_seat(self, seat):
         rows, seat_letters = self._aircraft.seating_plan()
@@ -74,7 +69,6 @@ class Flight:
             raise ValueError(f"Invalid row number {row}")
 
         return row, letter
-
 
     def relocate_passenger(self, from_seat, to_seat):
 
@@ -107,13 +101,20 @@ class Flight:
                     yield (passenger, f"{row}{letter}")
 
 
-class AirbusA319:
+class Aircraft:
 
     def __init__(self, registration):
         self._registration = registration
 
     def registration(self):
         return self._registration
+
+    def num_seats(self):
+        rows, row_seats = self.seating_plan()
+        return len(rows) * len(row_seats)
+
+
+class AirbusA319(Aircraft):
 
     def model(self):
         return "Airbus A319"
@@ -122,13 +123,7 @@ class AirbusA319:
         return range(1, 23), "ABCDEF"
 
 
-class Boeing777:
-
-    def __init__(self, registration):
-        self._registration = registration
-
-    def registration(self):
-        return self._registration
+class Boeing777(Aircraft):
 
     def model(self):
         return "Boeing 777"
